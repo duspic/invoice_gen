@@ -1,0 +1,34 @@
+{
+    "invoice_no": 123,
+    "date": "2024-06-29",
+    "sender": {
+        "name": "ABC Corp",
+        "pdv_id": "123456789",
+        "address": "123 Main St",
+        "postal_code": 1000,
+        "town": "Metropolis",
+        "country": "Wonderland"
+    },
+    "recipient": {
+        "name": "XYZ Ltd",
+        "pdv_id": "987654321",
+        "address": "456 Elm St",
+        "postal_code": 2000,
+        "town": "Gotham",
+        "country": "Wonderland"
+    },
+    "content": {
+        "tasks": [
+            {
+                "name": "Task 1",
+                "description": "Development work",
+                "price": 1000
+            },
+            {
+                "name": "Task 2",
+                "description": "Testing",
+                "price": 500
+            }
+        ]
+    }
+}

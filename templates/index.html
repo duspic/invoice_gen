@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice PDF Generator</title>
+    <style>
+        .collapsible {
+            background-color: #f9f9f9;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            border-left: solid 1px #ddd;
+            border-right: solid 1px #ddd;
+            border-bottom: solid 1px #ddd;
+        }
+        pre {
+            margin: 0;
+            padding: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice PDF Generator</h1>
+    <p>Welcome to the Invoice PDF Generator microservice.</p>
+    <p>To generate an invoice PDF, send a POST request to <code>/generate_invoice</code> with a JSON body containing the invoice details.</p>
+    <button class="collapsible">Example JSON</button>
+    <div class="content">
+        <pre>{{ example_json | tojson(indent=4) }}</pre>
+    </div>
+    <button class="collapsible">Invoice Schema</button>
+    <div class="content">
+        <pre>{{ schema | tojson(indent=4) }}</pre>
+    </div>
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
