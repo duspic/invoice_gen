@@ -1,8 +1,9 @@
-
-
 # Invoice PDF Generator
 
-Welcome to the Invoice PDF Generator microservice.
+To run it succesfully, build tand run he docker image with
+
+> docker build -t invoicegen .
+> docker run -p 5000:5000 invoicegen
 
 To generate an invoice PDF, send a POST request to `/generate_invoice` with a JSON body containing the invoice details.
 
