@@ -1,14 +1,15 @@
 # Invoice PDF Generator
 
-To run it succesfully, build tand run he docker image with
+To run it succesfully, build and run the docker image with
 
 > docker build -t invoicegen .
 > docker run -p 5000:5000 invoicegen
 
-To generate an invoice PDF, send a POST request to `/generate_invoice` with a JSON body containing the invoice details.
+To generate an invoice PDF, go to `/form` and fill out the details, or send a POST request to `/generate_invoice` with a JSON body containing the invoice details.
 
 Example request from cmd, when running on localhost, sending a file called test_invoice.json
-curl -X POST http://127.0.0.1:5000/generate_invoice -H "Content-Type: application/json" -d @test_invoice.json --output test_invoice.pdf
+
+> curl -X POST http://127.0.0.1:5000/generate_invoice -H "Content-Type: application/json" -d @test_invoice.json --output test_invoice.pdf
 
 test_invoice.json
 

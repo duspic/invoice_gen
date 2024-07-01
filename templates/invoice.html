@@ -7,53 +7,84 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
         }
         .container {
             width: 80%;
-            margin: 0 auto;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h1, h2 {
-            border-bottom: 1px solid #ccc;
+            color: #333;
+            border-bottom: 2px solid #007BFF;
             padding-bottom: 5px;
         }
-        p {
-            margin: 5px 0;
+        p, ul {
+            margin: 10px 0;
+            color: #555;
         }
         ul {
-            list-style-type: none;
             padding: 0;
+            list-style-type: none;
         }
         ul li {
             background: #f9f9f9;
-            margin: 5px 0;
+            margin: 10px 0;
             padding: 10px;
             border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        ul li strong {
+            display: block;
+            color: #333;
+        }
+        .total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .disclaimer {
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Invoice #{{ invoice.invoice_no }}</h1>
-        <p>Date: {{ invoice.date }}</p>
+        <h1>Invoice #{{ invoice.invoice_no }}-{{ invoice.date[:4] }}</h1>
+        <p><strong>Date:</strong> {{ invoice.date }}</p>
 
-        <h2>Sender:</h2>
+        <h2>Sender</h2>
         <p>{{ invoice.sender.name }}</p>
         <p>{{ invoice.sender.address }}, {{ invoice.sender.postal_code }}</p>
         <p>{{ invoice.sender.town }}, {{ invoice.sender.country }}</p>
         
-        <h2>Recipient:</h2>
+        <h2>Recipient</h2>
         <p>{{ invoice.recipient.name }}</p>
         <p>{{ invoice.recipient.address }}, {{ invoice.recipient.postal_code }}</p>
         <p>{{ invoice.recipient.town }}, {{ invoice.recipient.country }}</p>
         
-        <h2>Tasks:</h2>
+        <h2>Tasks</h2>
         <ul>
             {% for task in invoice.content.tasks %}
             <li>
-                <strong>{{ task.name }}:</strong> {{ task.description }} - ${{ task.price }}
+                <strong>{{ task.name }}:</strong> {{ task.description }} - {{ task.price }}€
             </li>
             {% endfor %}
         </ul>
+
+        <div class="total">
+            <p>Total: {{ invoice.content.tasks | sum(attribute='price') }}€</p>
+        </div>
+
+        <p class="disclaimer">DISCLAIMER: Exempt from tax - VAT reverse charge</p>
     </div>
 </body>
 </html>
