@@ -1,6 +1,7 @@
-from weasyprint import HTML
 from jinja2 import Environment, FileSystemLoader
+from xhtml2pdf import pisa
 from typing import Dict, Any
+import io
 
 def generate_invoice_pdf(invoice: Dict[str, Any]) -> bytes:
     """
@@ -20,5 +21,12 @@ def generate_invoice_pdf(invoice: Dict[str, Any]) -> bytes:
     html_content = template.render(invoice=invoice)
 
     # Generate the PDF from the rendered HTML
-    pdf = HTML(string=html_content).write_pdf()
-    return pdf
+    pdf_stream = io.BytesIO()
+    pisa_status = pisa.CreatePDF(io.StringIO(html_content), dest=pdf_stream)
+
+    # Check for errors
+    if pisa_status.err:
+        raise Exception("PDF generation error")
+
+    pdf_stream.seek(0)
+    return pdf_stream.getvalue()
