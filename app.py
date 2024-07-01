@@ -86,5 +86,9 @@ def generate_invoice():
         }
         return jsonify(response), 400
 
+@app.route('/form', methods=['GET'])
+def form():
+    return render_template('form.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

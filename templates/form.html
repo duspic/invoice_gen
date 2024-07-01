@@ -1,0 +1,151 @@
+<!-- templates/form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Form</title>
+    <script>
+        function submitForm() {
+            const invoice = {
+                invoice_no: parseInt(document.getElementById('invoice_no').value),
+                date: document.getElementById('date').value,
+                sender: {
+                    name: document.getElementById('sender_name').value,
+                    pdv_id: document.getElementById('sender_pdv_id').value,
+                    address: document.getElementById('sender_address').value,
+                    postal_code: parseInt(document.getElementById('sender_postal_code').value),
+                    town: document.getElementById('sender_town').value,
+                    country: document.getElementById('sender_country').value
+                },
+                recipient: {
+                    name: document.getElementById('recipient_name').value,
+                    pdv_id: document.getElementById('recipient_pdv_id').value,
+                    address: document.getElementById('recipient_address').value,
+                    postal_code: parseInt(document.getElementById('recipient_postal_code').value),
+                    town: document.getElementById('recipient_town').value,
+                    country: document.getElementById('recipient_country').value
+                },
+                content: {
+                    tasks: Array.from(document.querySelectorAll('.task')).map(task => ({
+                        name: task.querySelector('.task_name').value,
+                        description: task.querySelector('.task_description').value,
+                        price: parseFloat(task.querySelector('.task_price').value)
+                    }))
+                }
+            };
+
+            fetch('/generate_invoice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(invoice)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'invoice.pdf');
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function addTask() {
+            const taskContainer = document.getElementById('tasks');
+            const taskTemplate = document.getElementById('task-template').content.cloneNode(true);
+            taskContainer.appendChild(taskTemplate);
+        }
+
+        function removeTask(element) {
+            element.closest('.task').remove();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('date').valueAsDate = new Date();
+        });
+    </script>
+    <style>
+        .task {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            position: relative;
+        }
+        .task .remove-task {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice Form</h1>
+    <form id="invoice-form" onsubmit="event.preventDefault(); submitForm();">
+        <fieldset>
+            <legend>Invoice Details</legend>
+            <label for="invoice_no">Invoice No:</label>
+            <input type="number" id="invoice_no" required><br>
+            <label for="date">Date:</label>
+            <input type="date" id="date" required><br>
+        </fieldset>
+        <fieldset>
+            <legend>Sender Details</legend>
+            <label for="sender_name">Name:</label>
+            <input type="text" id="sender_name" value="Piljak, vl. Ivan Duspara" required><br>
+            <label for="sender_pdv_id">PDV ID:</label>
+            <input type="text" id="sender_pdv_id" value="HR53126535864" required><br>
+            <label for="sender_address">Address:</label>
+            <input type="text" id="sender_address" value="Mladena Fiolića 18E" required><br>
+            <label for="sender_postal_code">Postal Code:</label>
+            <input type="number" id="sender_postal_code" value="10000" required><br>
+            <label for="sender_town">Town:</label>
+            <input type="text" id="sender_town" value="Zagreb" required><br>
+            <label for="sender_country">Country:</label>
+            <input type="text" id="sender_country" value="Croatia" required><br>
+        </fieldset>
+        <fieldset>
+            <legend>Recipient Details</legend>
+            <label for="recipient_name">Name:</label>
+            <input type="text" id="recipient_name" placeholder="Recipient Name" required><br>
+            <label for="recipient_pdv_id">PDV ID:</label>
+            <input type="text" id="recipient_pdv_id" placeholder="Recipient PDV ID" required><br>
+            <label for="recipient_address">Address:</label>
+            <input type="text" id="recipient_address" placeholder="Recipient Address"><br>
+            <label for="recipient_postal_code">Postal Code:</label>
+            <input type="number" id="recipient_postal_code" placeholder="Recipient Postal Code"><br>
+            <label for="recipient_town">Town:</label>
+            <input type="text" id="recipient_town" placeholder="Recipient Town"><br>
+            <label for="recipient_country">Country:</label>
+            <input type="text" id="recipient_country" placeholder="Recipient Country"><br>
+        </fieldset>
+        <fieldset>
+            <legend>Tasks</legend>
+            <div id="tasks"></div>
+            <button type="button" onclick="addTask()">Add Task</button>
+        </fieldset>
+        <input type="submit" value="Submit Invoice">
+    </form>
+
+    <template id="task-template">
+        <div class="task">
+            <button type="button" class="remove-task" onclick="removeTask(this)">X</button>
+            <label>Task Name:</label>
+            <input type="text" class="task_name" placeholder="Task Name" required><br>
+            <label>Description:</label>
+            <input type="text" class="task_description" placeholder="Task Description"><br>
+            <label>Price:</label>
+            <input type="number" class="task_price" step="0.01" placeholder="Task Price" required><br>
+        </div>
+    </template>
+</body>
+</html>
