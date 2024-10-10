@@ -3,6 +3,8 @@
 To run it succesfully, build and run the docker image with
 
 > docker build -t invoicegen .
+>
+>
 > docker run -p 5000:5000 invoicegen
 
 The default docker image (300MB) uses xhtml2pdf python library to render the pdf contents. This is a lightweight solution, but lacking in nuances. A heavier solution (650 MB) is to use the weasyprint library, included in a separate folder. To use it, move it to the main directory and replace the Dockerfile with Dockerfile_weasy, and requirements.txt with requirements_weasy.txt
